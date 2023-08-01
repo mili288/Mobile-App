@@ -8,6 +8,8 @@ import { Messages } from './models/Messages.js';
 import http from 'http';
 import { User } from './models/User.js';
 import bcrypt from 'bcrypt';
+import { Post } from './models/Post.js'; // Import the Post model
+import authMiddleware from './routes/users.js';
 
 const app = express();
 dotenv.config();
@@ -215,6 +217,23 @@ app.get('/messages/:room', async (req, res) => {
     res.status(500).json({ error: 'Internal server error' });
   }
 });
+
+// create post route
+router.post('/posts', authMiddleware, async (req, res) => {
+  try {
+    const { content } = req.body;
+    const image = req.file; // Assuming you're using a file upload library like multer
+
+    const post = new Post({ content, image });
+    await post.save();
+
+    res.json({ message: 'Post created', post });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Failed to create post' });
+  }
+});
+
 
 const port = process.env.SOCKET_PORT || 3001;
  server.listen(port, () => console.log(`Socket listening on port ${port}`)

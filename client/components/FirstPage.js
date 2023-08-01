@@ -84,8 +84,8 @@ function HomeScreen() {
       style={{
         flexDirection: 'row',
         justifyContent: 'space-evenly',
-        backgroundColor: 'lightgray',
-        paddingVertical: 10,
+        backgroundColor: '#F2F2F2',
+        paddingVertical: 20,
       }}
     >
       {isLoggedIn && (
@@ -104,7 +104,7 @@ function HomeScreen() {
             name="comment"
             type="font-awesome"
             color='#303030'
-            onPress={() => navigation.navigate('Chat')}
+            onPress={() => navigation.navigate('Lobby')}
           />
 
           <Icon

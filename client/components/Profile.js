@@ -4,9 +4,13 @@ import { Avatar } from '@rneui/themed';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Chip } from 'react-native-paper';
+import { Icon } from '@rneui/themed';
+import { useNavigation } from '@react-navigation/native';
 
-function Profile({ navigation }) {
+function Profile() {
   const [user, setUser] = useState(null);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const navigation = useNavigation();
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -22,6 +26,17 @@ function Profile({ navigation }) {
     fetchUser();
   }, []);
 
+  const handleLogout = async () => {
+    try {
+      // Clear token from AsyncStorage
+      await AsyncStorage.removeItem('token');
+      setIsLoggedIn(false);
+      navigation.navigate('FirstLogin');
+    } catch (error) {
+      console.log('Error removing token from AsyncStorage:', error);
+    }
+  };
+
   if (!user) {
     return (
       <SafeAreaView style={styles.container}>
@@ -31,6 +46,7 @@ function Profile({ navigation }) {
   }
 
   return (
+    <>
     <SafeAreaView style={styles.container}>
       <View style={styles.profileContainer}>
         <Text style={styles.heading}>Profile</Text>
@@ -45,6 +61,48 @@ function Profile({ navigation }) {
       <View>
       </View>
     </SafeAreaView>
+
+    <View style={{ justifyContent: 'flex-end' }}>
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'space-evenly',
+            backgroundColor: '#F2F2F2',
+            paddingVertical: 20,
+          }}
+        >
+          <Icon
+            name="home"
+            type="font-awesome"
+            color='#303030'
+            onPress={() => navigation.navigate('Home')}
+          />
+
+          <>
+            <Icon
+              name="comment"
+              type="font-awesome"
+              color='#303030'
+              onPress={() => navigation.navigate('Lobby')}
+            />
+
+            <Icon
+              name="user"
+              type="font-awesome"
+              color='#303030'
+              onPress={() => navigation.navigate('Profile')}
+            />
+
+            <Icon
+              name="sign-out"
+              type="font-awesome"
+              color="#303030"
+              onPress={handleLogout}
+            />
+          </>
+        </View>
+      </View>
+    </>
   );
 }
 

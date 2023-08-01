@@ -12,8 +12,10 @@ function Login({ navigation }) {
       const response = await axios.post('https://chat-app-vlzr.onrender.com/users/login', { email, password });
       const token = response.data.token;
       const userId = response.data.user._id;
+      const username = response.data.user.username;
       await AsyncStorage.setItem('token', token);
       await AsyncStorage.setItem('userId', userId);
+      await AsyncStorage.setItem('username', username);
       setEmail('');
       setPassword('');
       navigation.navigate('Profile');

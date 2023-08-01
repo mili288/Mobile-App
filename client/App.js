@@ -11,7 +11,6 @@ import FirstLogin from './components/FirstLogin';
 import Home from './components/Home';
 import Chat from './components/Chat';
 import Lobby from './components/Lobby';
-import Messages from './components/Messages';
 
 const Stack = createNativeStackNavigator();
 
@@ -38,7 +37,6 @@ const App = () => {
       >
         <Stack.Screen name="FirstPage" component={FirstPage} />
         <Stack.Screen name="Lobby" component={Lobby} />
-        <Stack.Screen name="Messages" component={Messages} />
         <Stack.Screen name="FirstLogin" component={FirstLogin} />
         <Stack.Screen name="Chat" component={Chat} />
         <Stack.Screen name="Home" component={Home} />
