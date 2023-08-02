@@ -29,11 +29,15 @@ const Chat = ({ username, room }) => {
       socket.emit("join_room", { gameId: room, userId: username });
 
       // Listen for received messages
-      socket.on("receive_message", (messages) => {
+      socket.on("receive_message", (newMessages, messages) => {
         // Update the message list only if the initial messages have been loaded
         if (initialMessagesLoaded) {
-          // Reverse the order of messages received
-          setMessageList((prevMessages) => [...messages.reverse(), ...prevMessages]);
+          setMessageList((prevMessages) => {
+            const uniqueNewMessages = newMessages.filter(
+              (newMsg) => !prevMessages.some((prevMsg) => prevMsg._id === newMsg._id)
+            );
+            return [...uniqueNewMessages, ...prevMessages];
+          });
         }
       });
     }
@@ -133,7 +137,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 16,
-    backgroundColor: "#fff",
+    backgroundColor: '#51E2F5'
   },
   chatHeader: {
     fontSize: 24,
@@ -142,7 +146,8 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   messageContainer: {
-    flex: 1,
+    flex: 0,
+    marginBottom: 50
   },
   messageList: {
     flexGrow: 1,
@@ -174,6 +179,8 @@ const styles = StyleSheet.create({
   messageTime: {
     fontSize: 12,
     color: "#888",
+    marginRight: 5,
+    marginTop: 3
   },
   messageAuthor: {
     fontSize: 14,

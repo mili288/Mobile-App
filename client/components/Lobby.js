@@ -43,7 +43,7 @@ function App() {
   };
 
   return (
-    <View style={{ flex: 1 }}>
+    <View style={{ flex: 1, backgroundColor: '#51E2F5' }}>
       {!showChat ? (
         <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
           <Text>Join A Room</Text>

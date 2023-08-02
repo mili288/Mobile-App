@@ -157,17 +157,24 @@ useEffect(() => {
     try {
       // Fetch all posts from the backend API
       const response = await axios.get('http://192.168.0.106:3000/users/posts-all');
-
+  
       // Assuming the response contains the array of posts, you can access them with response.data
       const fetchedPosts = response.data;
       console.log('Fetched Posts:', fetchedPosts);
-
-      // Update the posts state with the fetched posts
-      setPosts(fetchedPosts);
+  
+      // Iterate through fetched posts and set the initial liked status based on user's like
+      const updatedPosts = fetchedPosts.map((post) => ({
+        ...post,
+        liked: post.likes.includes(loggedInUsername), // Check if user's username is in the likes array
+      }));
+  
+      // Update the posts state with the fetched posts and their initial liked status
+      setPosts(updatedPosts);
     } catch (error) {
       console.error('Error fetching the posts:', error);
     }
   };
+  
 
   const handleLikePost = async (postId) => {
     try {
@@ -192,6 +199,7 @@ useEffect(() => {
       console.error('Error adding like to post:', error);
     }
   };
+  
   
 
 
@@ -255,7 +263,7 @@ useEffect(() => {
   return (
     <>
      <ScrollView
-      style={{ flex: 1 }}
+      style={{ flex: 1, backgroundColor: '#51E2F5' }}
       refreshControl={
         <RefreshControl
           refreshing={refreshing}
@@ -307,19 +315,23 @@ useEffect(() => {
         {/* Render the posts */}
         {posts.map((post) => (
         <Card style={{ marginBottom: 10 }} key={post._id}>
-                {/* Delete Button */}
-{post.author === loggedInUsername && (
+          <Card.Title
+            title={<><Text style={{ fontSize: 17, fontWeight: '600' }}>{post.author}</Text></>}
+            right={
+              (props) => (
+              <View>
+              {post.author === loggedInUsername && (
   <MaterialCommunityIcons
-    style={{ marginLeft: 350, marginBottom: 0 }}
+    style={{ marginRight: 15 }}
     name={liked ? "delete-outline" : "delete-outline"}
-    size={30}
+    size={32}
     onPress={() => handleDeletePost(post._id)} // Add the handleDeletePost function
   />
 )}
-          <Card.Title
-            title={post.author}
+              </View>
+        )}
            // left={LeftContent}
-          /> 
+/>  
           <Card.Content>
           <Text style={{ fontSize: 20 }}>{post.content}</Text>
             <Text style={{ fontSize: 10 }}>{post.time}</Text>
